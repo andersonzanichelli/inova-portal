@@ -107,4 +107,24 @@ public class City {
 	public void setId(Long id) {
 		this.id = id;
 	}
+
+	public void setNeighborhood(List<Neighborhood> neighborhood) {
+		this.neighborhood = neighborhood;
+	}
+
+	public void setPopulation(Integer population) {
+		this.population = population;
+	}
+
+	public void setFoundationDate(LocalDate foundationDate) {
+		this.foundationDate = foundationDate;
+	}
+
+	public void setCoordinate(Coordinate coordinate) {
+		this.coordinate = coordinate;
+	}
+
+	public void addNeighbor(Neighborhood neighbor) {
+		neighborhood.add(neighbor);
+	}
 }

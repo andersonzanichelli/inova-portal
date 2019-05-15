@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.inova.portal.model.City;
 import com.inova.portal.model.Coordinate;
+import com.inova.portal.model.Neighborhood;
 import com.inova.portal.service.AdditionNeighborException;
 import com.inova.portal.service.CityServiceImpl;
 import com.inova.portal.service.UpdateCityException;
@@ -207,11 +208,16 @@ public class CityControllerTest {
 	
 	@Test
 	public void addNeighbor() throws Exception {
-		City city = Mockito.mock(City.class);
-		Mockito.when(cityService.addNeighbor(10l, 12l)).thenReturn(city);
+		Coordinate bhCoordinate = new Coordinate(-19.9069359, -43.9758943);
+		City bh = new City("Belo Horizonte", bhCoordinate, 2523794, "1897-12-12");
+		bh.setId(10l);
+		Neighborhood neighbor = new Neighborhood(10l, 12l, 12.7);
+		bh.setNeighborhood(Lists.newArrayList(neighbor));
+		
+		Mockito.when(cityService.addNeighbor(10l, 12l)).thenReturn(bh);
 		
 		MockHttpServletResponse response = mvc.perform(put("/api/v1/city/10/neighboor/12")
-				.contentType(MediaType.APPLICATION_JSON))
+				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk())
 	            .andReturn().getResponse();
 		

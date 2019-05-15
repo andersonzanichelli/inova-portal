@@ -13,12 +13,16 @@ public class Neighborhood {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	@SuppressWarnings("unused")
 	private Long city;
 
+	@JsonProperty("id")
 	private Long neighbor;
 	
-	@JsonProperty
+	@JsonProperty("distance")
 	private Double distance;
+	
+	public Neighborhood() {}
 	
 	public Neighborhood(Long city, Long neighbor, Double distance) {
 		this.city = city;
@@ -34,14 +38,6 @@ public class Neighborhood {
 		return neighbor;
 	}
 	
-	public Long getCity() {
-		return city;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
 	@Override
 	public String toString() {
 		String json = "{" +

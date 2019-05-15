@@ -40,6 +40,18 @@ public class Coordinate {
 		return lng;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setLat(Double lat) {
+		this.lat = lat;
+	}
+
+	public void setLng(Double lng) {
+		this.lng = lng;
+	}
+
 	public Double calculateDistance(City from) {
 		double deltaLat = Math.toRadians(from.getCoordinate().getLat() - this.getLat());
 	    double deltaLon = Math.toRadians(from.getCoordinate().getLng() - this.getLng());

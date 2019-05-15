@@ -3,7 +3,6 @@ package com.inova.portal.repo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -12,10 +11,8 @@ import javax.validation.Validator;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.google.common.collect.Lists;
@@ -27,16 +24,19 @@ import com.inova.portal.model.Neighborhood;
 @DataJpaTest
 public class CityRepositoryTest {
 	
-	@MockBean
+	@Autowired
 	private CityRepository cityRepository;
 	
 	@Autowired
 	private CoordinateRepository coordinateRepository;
+	
+	@Autowired
+	private NeighborhoodRepository neighborhoodRepository;
 
 	@Test
 	public void findAll() {
-		Coordinate coordinate = new Coordinate(-19.9069359, -43.9758943);
-		coordinateRepository.saveAndFlush(coordinate);
+		Coordinate c = new Coordinate(-19.9069359, -43.9758943);
+		Coordinate coordinate = coordinateRepository.saveAndFlush(c);
 		
 		City bh = new City("Belo Horizonte", coordinate);
 		cityRepository.saveAndFlush(bh);
@@ -134,24 +134,28 @@ public class CityRepositoryTest {
 	
 	@Test(expected = CityWithOnlyOneNeighborException.class)
 	public void throwExceptionWhenTryToDeleteCityWithMoreThanOneNeighbor() {
+		Coordinate coordinate = new Coordinate(-19.9069359, -43.9758943);
+		coordinate = coordinateRepository.saveAndFlush(coordinate);
 		
-		Neighborhood neighbor = Mockito.mock(Neighborhood.class);
+		City city = new City("Belo Horizonte", coordinate);
+		Neighborhood contagem = new Neighborhood(10l, 12l, 12.7);
+		Neighborhood sabara = new Neighborhood(10l, 13l, 11.8);
+		contagem = neighborhoodRepository.saveAndFlush(contagem);
+		sabara = neighborhoodRepository.saveAndFlush(sabara);
+		city.setNeighborhood(Lists.newArrayList(contagem, sabara));
 		
-		City city = Mockito.mock(City.class);
-		Mockito.when(cityRepository.findById(10l)).thenReturn(Optional.of(city));
-		
-		Mockito.when(city.getId()).thenReturn(10l);
-		Mockito.when(city.getNeighboors()).thenReturn(Lists.newArrayList(neighbor, neighbor));
+		cityRepository.saveAndFlush(city);
 		
 		cityRepository.deleteById(city.getId());
 	}
 	
 	@Test(expected = CityWithOnlyOneNeighborException.class)
 	public void throwExceptionWhenTryToDeleteCityWithoutNeighbors() {
-		City city = Mockito.mock(City.class);
+		Coordinate c = new Coordinate(-19.9069359, -43.9758943);
+		Coordinate coordinate = coordinateRepository.saveAndFlush(c);
 		
-		Mockito.when(city.getId()).thenReturn(10l);
-		Mockito.when(city.getNeighboors()).thenReturn(Lists.newArrayList());
+		City city = new City("Belo Horizonte", coordinate);
+		cityRepository.saveAndFlush(city);
 		
 		cityRepository.deleteById(city.getId());
 	}

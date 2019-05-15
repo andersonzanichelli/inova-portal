@@ -1,12 +1,14 @@
 package com.inova.portal.service;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inova.portal.model.City;
 import com.inova.portal.model.Neighborhood;
 import com.inova.portal.repo.CityRepository;
@@ -35,21 +37,33 @@ public class CityServiceImpl implements CityService {
 		return cityRepository.findAll();
 	}
 
-	public City updateCity(Long id, City source) throws UpdateCityException {
-		ObjectMapper objectMapper = new ObjectMapper();
+	public City updateCity(Long id, City newData) throws UpdateCityException {
+		Optional<City> city = cityRepository.findById(id);
 		
-		City deepCopy = null;
+		if(!city.isPresent())
+			throw new UpdateCityException("City not found!");
 		
-		try {
-			deepCopy = objectMapper.readValue(objectMapper.writeValueAsString(source), City.class);
-			deepCopy.setId(id);
-		} catch(Exception ex) {
-			throw new UpdateCityException(ex.getMessage());
+		City toUpdate = city.get();
+		
+		if(!isNullOrEmpty(newData.getName()))
+			toUpdate.setName(newData.getName());
+		
+		if(!isNullOrEmpty(newData.getFoundationDate()))
+			toUpdate.setFoundationDate(LocalDate.parse(newData.getFoundationDate()));
+		
+		if(newData.getPopulation() != null)
+			toUpdate.setPopulation(newData.getPopulation());
+		
+		if(newData.getCoordinate() != null) {
+			if(newData.getCoordinate().getLat() != null && newData.getCoordinate().getLng() != null)
+				toUpdate.setCoordinate(coordinateRepository.saveAndFlush(newData.getCoordinate()));
 		}
 		
-		deepCopy.setCoordinates(coordinateRepository.saveAndFlush(deepCopy.getCoordinate()));
+		if(!newData.getNeighboors().isEmpty())
+			for (Neighborhood neighbor : newData.getNeighboors())
+				toUpdate.addNeighbor(neighborhoodRepository.saveAndFlush(neighbor));
 		
-		return cityRepository.saveAndFlush(deepCopy);
+		return cityRepository.saveAndFlush(toUpdate);
 	}
 
 	public void deleteCity(Long id) {
@@ -69,7 +83,9 @@ public class CityServiceImpl implements CityService {
 	
 			neighborhoodRepository.saveAndFlush(neighborhood);
 			
-			return city;
+			city.addNeighbor(neighborhood);
+			
+			return cityRepository.saveAndFlush(city);
 		}
 		
 		throw new AdditionNeighborException();

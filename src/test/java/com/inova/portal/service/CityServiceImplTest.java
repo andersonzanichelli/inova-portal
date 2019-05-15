@@ -16,9 +16,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.google.common.collect.Lists;
 import com.inova.portal.model.City;
-import com.inova.portal.model.Coordinate;
 import com.inova.portal.repo.CityRepository;
 import com.inova.portal.repo.CoordinateRepository;
+import com.inova.portal.repo.NeighborhoodRepository;
 
 @RunWith(SpringRunner.class)
 public class CityServiceImplTest {
@@ -40,17 +40,15 @@ public class CityServiceImplTest {
     
     @MockBean
     private CoordinateRepository coordinateRepository;
+    
+    @MockBean
+    private NeighborhoodRepository neighborRepository;
 	
     @Before
     public void setUp() {
-		Coordinate bhCoordinate = new Coordinate(-19.9069359, -43.9758943);
-		City bh = new City("Belo Horizonte", bhCoordinate);
-		
-		Coordinate contagemCoordinate = new Coordinate(-19.9094429, -44.0972261);
-		City contagem = new City("Contagem", contagemCoordinate);
-		
-		Coordinate sabaraCoordinate = new Coordinate(-19.8873791, -43.8649765);
-		City sabara = new City("Sabará", sabaraCoordinate);
+		City bh = Mockito.mock(City.class);
+		City contagem = Mockito.mock(City.class);
+		City sabara = Mockito.mock(City.class);
 
         Mockito.when(cityRepository.findAll()).thenReturn(Lists.newArrayList(bh, contagem, sabara));
     }
