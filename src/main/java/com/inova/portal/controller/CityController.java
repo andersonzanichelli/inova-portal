@@ -88,4 +88,17 @@ public class CityController {
 		
 		return ResponseEntity.ok().body(city);
 	}
+	
+	@DeleteMapping(path = "v1/city/{city-id}/neighboor/{neighbor-id}", produces=MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseEntity<City> removeNeighbor(@PathVariable("city-id") Long id, @PathVariable("neighbor-id") Long neighborId) {
+		City city = null;
+		
+		try {
+			city = cityService.removeNeighbor(id, neighborId);
+		} catch(Exception ex) {
+			return ResponseEntity.badRequest().body(null);
+		}
+		
+		return ResponseEntity.ok().body(city);
+	}
 }

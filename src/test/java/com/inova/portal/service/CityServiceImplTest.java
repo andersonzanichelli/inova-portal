@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -16,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.google.common.collect.Lists;
 import com.inova.portal.model.City;
+import com.inova.portal.model.Coordinate;
 import com.inova.portal.repo.CityRepository;
 import com.inova.portal.repo.CoordinateRepository;
 import com.inova.portal.repo.NeighborhoodRepository;
@@ -43,20 +43,28 @@ public class CityServiceImplTest {
     
     @MockBean
     private NeighborhoodRepository neighborRepository;
-	
-    @Before
-    public void setUp() {
+
+	@Test
+	public void findAll() {
 		City bh = Mockito.mock(City.class);
 		City contagem = Mockito.mock(City.class);
 		City sabara = Mockito.mock(City.class);
 
         Mockito.when(cityRepository.findAll()).thenReturn(Lists.newArrayList(bh, contagem, sabara));
-    }
-    
-	@Test
-	public void findAll() {
+		
 		List<City> cities = cityService.getAllCities();
 		assertThat(cities.size()).isEqualTo(3);
 	}
-
+	
+	@Test
+	public void insert() {
+		Coordinate coordinate = Mockito.mock(Coordinate.class);
+		Mockito.when(coordinateRepository.saveAndFlush(coordinate)).thenReturn(coordinate);
+		City bh = Mockito.mock(City.class);
+		Mockito.when(bh.getName()).thenReturn("BH");
+		Mockito.when(cityRepository.saveAndFlush(bh)).thenReturn(bh);
+		
+		City insertedCity = cityService.insertCity(bh);
+		assertThat(insertedCity.getName()).isEqualTo("BH");
+	}
 }

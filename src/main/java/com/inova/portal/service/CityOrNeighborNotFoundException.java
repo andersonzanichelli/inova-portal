@@ -1,10 +1,10 @@
 package com.inova.portal.service;
 
-public class AdditionNeighborException extends RuntimeException {
+public class CityOrNeighborNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = -9086255952834888198L;
 	
-	public AdditionNeighborException() {
+	public CityOrNeighborNotFoundException() {
 		super("City or neighbor not present");
 	}
 }

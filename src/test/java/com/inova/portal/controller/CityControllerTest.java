@@ -30,7 +30,7 @@ import com.google.common.collect.Lists;
 import com.inova.portal.model.City;
 import com.inova.portal.model.Coordinate;
 import com.inova.portal.model.Neighborhood;
-import com.inova.portal.service.AdditionNeighborException;
+import com.inova.portal.service.CityOrNeighborNotFoundException;
 import com.inova.portal.service.CityServiceImpl;
 import com.inova.portal.service.UpdateCityException;
 
@@ -241,7 +241,7 @@ public class CityControllerTest {
 	@Test
 	@SuppressWarnings("deprecation")
 	public void errorOnAddNeighbor() throws Exception {
-		Mockito.when(cityService.addNeighbor(org.mockito.Matchers.any(Long.class), org.mockito.Matchers.any(Long.class))).thenThrow(AdditionNeighborException.class);
+		Mockito.when(cityService.addNeighbor(org.mockito.Matchers.any(Long.class), org.mockito.Matchers.any(Long.class))).thenThrow(CityOrNeighborNotFoundException.class);
 		
 		mvc.perform(put("/api/v1/city/10/neighboor/12")
 				.contentType(MediaType.APPLICATION_JSON))

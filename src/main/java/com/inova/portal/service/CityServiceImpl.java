@@ -88,6 +88,30 @@ public class CityServiceImpl implements CityService {
 			return cityRepository.saveAndFlush(city);
 		}
 		
-		throw new AdditionNeighborException();
+		throw new CityOrNeighborNotFoundException();
+	}
+
+	public City removeNeighbor(Long id, Long neighborId) {
+		Optional<City> c = cityRepository.findById(id);
+		
+		if(c.isPresent()) {
+			City city = c.get();
+
+			Neighborhood toRemove = null;
+			for (Neighborhood neigh : city.getNeighboors()) {
+				if (neigh.getNeighbor() == neighborId) {
+					toRemove = neigh;
+					break;
+				}
+			}
+			
+			city.getNeighboors().remove(toRemove);
+	
+			neighborhoodRepository.delete(toRemove);
+			
+			return cityRepository.saveAndFlush(city);
+		}
+		
+		throw new CityOrNeighborNotFoundException();
 	}
 }
