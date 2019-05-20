@@ -103,7 +103,7 @@ public class CityController {
 		return ResponseEntity.ok().body(city);
 	}
 	
-	@RequestMapping(value={"/api/v1/city/shortestpath/{from-city-id}/{to-city-id}"})
+	@RequestMapping(value={"v1/city/shortestpath/{from-city-id}/{to-city-id}"})
 	public ResponseEntity<Path> shortestpath(@PathVariable("from-city-id") Long id, @PathVariable("to-city-id") Long toCity) {
 		
 		Path path = null;

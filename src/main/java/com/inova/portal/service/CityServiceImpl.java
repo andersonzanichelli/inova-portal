@@ -127,6 +127,14 @@ public class CityServiceImpl implements CityService {
 			if(city.equals(destiny)) {
 				return path;
 			}
+			
+			Neighborhood neighbor = neighborhoodRepository.findByNeighbor(toCity);
+			if(city.getNeighboors().contains(neighbor)) {
+				path.minDistance = neighbor.getDistance();
+				path.cities.add(id);
+				path.cities.add(toCity);
+			}
+				
 		}
 		
 		return path;

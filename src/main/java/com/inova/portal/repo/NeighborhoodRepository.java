@@ -7,4 +7,5 @@ import com.inova.portal.model.Neighborhood;
 public interface NeighborhoodRepository extends JpaRepository<Neighborhood, Long> {
 
 	public List<Neighborhood> findByCity(Long cityId);
+	public Neighborhood findByNeighbor(Long neighborId);
 }
