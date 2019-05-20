@@ -114,4 +114,21 @@ public class CityServiceImpl implements CityService {
 		
 		throw new CityOrNeighborNotFoundException();
 	}
+
+	public Path shortestpath(Long id, Long toCity) {
+		Path path = new Path();
+		Optional<City> c = cityRepository.findById(id);
+		Optional<City> to = cityRepository.findById(toCity);
+		
+		if(c.isPresent() && to.isPresent()) {
+			City city = c.get();
+			City destiny = to.get();
+			
+			if(city.equals(destiny)) {
+				return path;
+			}
+		}
+		
+		return path;
+	}
 }

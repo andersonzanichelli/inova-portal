@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.collect.Lists;
 import com.inova.portal.model.City;
 import com.inova.portal.service.CityServiceImpl;
+import com.inova.portal.service.Path;
 import com.inova.portal.service.UpdateCityException;
 
 @RestController
@@ -100,5 +101,18 @@ public class CityController {
 		}
 		
 		return ResponseEntity.ok().body(city);
+	}
+	
+	@RequestMapping(value={"/api/v1/city/shortestpath/{from-city-id}/{to-city-id}"})
+	public ResponseEntity<Path> shortestpath(@PathVariable("from-city-id") Long id, @PathVariable("to-city-id") Long toCity) {
+		
+		Path path = null;
+		try {
+			path = cityService.shortestpath(id, toCity);
+		} catch(Exception ex) {
+			return ResponseEntity.badRequest().body(path);
+		}
+		
+		return ResponseEntity.ok().body(path);
 	}
 }
