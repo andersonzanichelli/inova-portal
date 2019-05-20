@@ -124,15 +124,29 @@ public class CityServiceImpl implements CityService {
 			City city = c.get();
 			City destiny = to.get();
 			
-			if(city.equals(destiny)) {
+			if(city.equals(destiny))
 				return path;
-			}
+
+			if(city.getNeighboors().isEmpty())
+				return path;
 			
 			Neighborhood neighbor = neighborhoodRepository.findByNeighbor(toCity);
 			if(city.getNeighboors().contains(neighbor)) {
 				path.minDistance = neighbor.getDistance();
 				path.cities.add(id);
 				path.cities.add(toCity);
+			} else {
+				for (Neighborhood destNeighbor: destiny.getNeighboors())
+					for (Neighborhood cityNeighbor : city.getNeighboors())
+						if(destNeighbor.getNeighbor().equals(cityNeighbor.getNeighbor()))
+							if(path.minDistance == 0) {
+								path.minDistance = destNeighbor.getDistance() +  cityNeighbor.getDistance();
+								path.cities.add(id);
+								path.cities.add(cityNeighbor.getNeighbor());
+								path.cities.add(toCity);
+							}
+
+
 			}
 				
 		}

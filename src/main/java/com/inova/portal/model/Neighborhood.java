@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -13,7 +14,8 @@ public class Neighborhood {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@SuppressWarnings("unused")
+	
+	@JsonIgnore
 	private Long city;
 
 	@JsonProperty("id")
@@ -36,6 +38,10 @@ public class Neighborhood {
 
 	public Long getNeighbor() {
 		return neighbor;
+	}
+	
+	public Long getCity() {
+		return city;
 	}
 	
 	@Override
