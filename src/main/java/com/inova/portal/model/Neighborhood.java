@@ -1,5 +1,7 @@
 package com.inova.portal.model;
 
+import java.util.Comparator;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-public class Neighborhood {
+public class Neighborhood implements Comparator<Neighborhood> {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -51,5 +53,16 @@ public class Neighborhood {
 							"\"distance\":" + distance +
 						"}";
 		return json;
+	}
+
+	@Override
+	public int compare(Neighborhood n1, Neighborhood n2) {
+		
+		if (n1.distance < n2.distance) 
+            return -1; 
+        if (n1.distance > n2.distance) 
+            return 1; 
+        
+        return 0;
 	}
 }

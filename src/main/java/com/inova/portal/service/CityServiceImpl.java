@@ -3,6 +3,7 @@ package com.inova.portal.service;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,10 @@ import com.inova.portal.model.Neighborhood;
 import com.inova.portal.repo.CityRepository;
 import com.inova.portal.repo.CoordinateRepository;
 import com.inova.portal.repo.NeighborhoodRepository;
+import com.inova.portal.util.Finder;
+import com.inova.portal.util.Graph;
+import com.inova.portal.util.Path;
+import com.inova.portal.util.Towards;
 
 @Service
 public class CityServiceImpl implements CityService {
@@ -130,26 +135,22 @@ public class CityServiceImpl implements CityService {
 			if(city.getNeighboors().isEmpty())
 				return path;
 			
-			Neighborhood neighbor = neighborhoodRepository.findByNeighbor(toCity);
-			if(city.getNeighboors().contains(neighbor)) {
-				path.minDistance = neighbor.getDistance();
-				path.cities.add(id);
-				path.cities.add(toCity);
-			} else {
-				for (Neighborhood destNeighbor: destiny.getNeighboors())
-					for (Neighborhood cityNeighbor : city.getNeighboors())
-						if(destNeighbor.getNeighbor().equals(cityNeighbor.getNeighbor()))
-							if(path.minDistance == 0) {
-								path.minDistance = destNeighbor.getDistance() +  cityNeighbor.getDistance();
-								path.cities.add(id);
-								path.cities.add(cityNeighbor.getNeighbor());
-								path.cities.add(toCity);
-							}
-
-
+			List<Neighborhood> neighborhood = neighborhoodRepository.findAll();
+			List<Towards> towards = new ArrayList<Towards>();
+			
+			for (Neighborhood neighbor : neighborhood) {
+				towards.add(new Towards(neighbor.getCity(), neighbor.getDistance(), neighbor.getNeighbor()));
 			}
-				
+			
+			Graph graph = new Graph();
+			
+			for (Towards toward : towards) {
+				graph.addEdge(toward.from, toward);
+			}
+			
+			return new Finder(graph, id, toCity).findShortest();
 		}
+		
 		
 		return path;
 	}

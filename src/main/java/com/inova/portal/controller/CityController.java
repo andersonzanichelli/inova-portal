@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.collect.Lists;
 import com.inova.portal.model.City;
 import com.inova.portal.service.CityServiceImpl;
-import com.inova.portal.service.Path;
 import com.inova.portal.service.UpdateCityException;
+import com.inova.portal.util.Path;
 
 @RestController
 @RequestMapping("/api")
