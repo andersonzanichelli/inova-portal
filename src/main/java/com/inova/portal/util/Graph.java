@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 
 public class Graph {
 
@@ -18,14 +17,6 @@ public class Graph {
             map.put(from, adjacent);
         }
         adjacent.add(to);
-    }
-
-    public boolean isConnected(Long from, Towards to) {
-        Set<Towards> adjacent = map.get(from);
-        if(adjacent==null) {
-            return false;
-        }
-        return adjacent.contains(to);
     }
 
     public LinkedList<Towards> adjacentNodes(Towards last) {

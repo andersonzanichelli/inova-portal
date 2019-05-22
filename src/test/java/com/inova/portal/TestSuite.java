@@ -8,6 +8,7 @@ import com.inova.portal.controller.CityToJsonTest;
 import com.inova.portal.repo.CityRepositoryTest;
 import com.inova.portal.repo.CoordinateRepositoryTest;
 import com.inova.portal.service.CityServiceImplTest;
+import com.inova.portal.util.FinderTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -15,7 +16,8 @@ import com.inova.portal.service.CityServiceImplTest;
     CityControllerTest.class,
     CityRepositoryTest.class,
     CityServiceImplTest.class,
-    CoordinateRepositoryTest.class
+    CoordinateRepositoryTest.class,
+    FinderTest.class
 })
 public class TestSuite {
 

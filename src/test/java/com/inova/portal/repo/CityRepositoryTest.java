@@ -3,6 +3,7 @@ package com.inova.portal.repo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -90,12 +91,25 @@ public class CityRepositoryTest {
 		
 		Coordinate sabaraCoordinate = new Coordinate(-19.8873791, -43.8649765);
 		coordinateRepository.saveAndFlush(sabaraCoordinate);
-		
+				
 		City bh = new City("Belo Horizonte", bhCoordinate);
 		bh.setPopulation(2523794);
 		bh.setfoundationDate("1897-12-12");
 		
 		City city = cityRepository.saveAndFlush(bh);
+		City contagem = cityRepository.saveAndFlush(new City("Contagem", contagemCoordinate));
+		City sabara = cityRepository.saveAndFlush(new City("Sabará", sabaraCoordinate));
+		
+		Neighborhood ncontagem = neighborhoodRepository.saveAndFlush(new Neighborhood(city.getId(), contagem.getId(), 50.0));
+		Neighborhood nsabara = neighborhoodRepository.saveAndFlush(new Neighborhood(city.getId(), sabara.getId(), 70.0));
+		
+		bh.addNeighbor(ncontagem);
+		bh.addNeighbor(nsabara);
+		
+		city = cityRepository.saveAndFlush(bh);
+		
+		Optional<City> optional = cityRepository.findById(city.getId());
+		city = optional.get();
 		
 		assertThat(city).isNotNull();
 		assertThat(city.getId()).isNotNull();
@@ -104,6 +118,7 @@ public class CityRepositoryTest {
 		assertThat(city.getCoordinate().getLng()).isEqualTo(-43.9758943);
 		assertThat(city.getPopulation()).isEqualTo(2523794);
 		assertThat(city.getFoundationDate()).isEqualTo("1897-12-12");
+		assertThat(city.getNeighboors().size()).isEqualTo(2);
 	}
 	
 	@Test

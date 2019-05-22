@@ -1,4 +1,4 @@
-package com.inova.portal.service;
+package com.inova.portal.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThat;

@@ -3,6 +3,7 @@ package com.inova.portal.service;
 import java.util.List;
 
 import com.inova.portal.model.City;
+import com.inova.portal.util.Path;
 
 public interface CityService {
 
@@ -11,4 +12,5 @@ public interface CityService {
 	List<City> getAllCities();
 	void deleteCity(Long id);
 	City addNeighbor(Long id, Long neighborId);
+	Path shortestpath(Long id, Long toCity);
 }
